@@ -15,6 +15,12 @@ Every later feature (retrieval, cited answers, the eval set) depends on having t
 
 Out of scope: embeddings, search, answering questions, and the eval set. Each will be its own change. Splitting chunks smaller than an article or subcategory is deferred until the eval set shows it is needed.
 
+Also out of scope, deliberately, because only the units listed above are chunked:
+- **NIST AI 100-1:** Part 1 (definitions, AI actors, and Section 3's characteristics of trustworthy AI), the introductions to each function, Profiles, and the appendices.
+- **EU AI Act:** recitals, chapter and section headings (articles are not tagged with the chapter they belong to), and footnote text (markers stay in the text).
+
+Effect: questions about these topics (for example "What are NIST's characteristics of trustworthy AI?" or "What does Chapter III cover?") have no chunk to answer them. The eval set should mark such questions out of scope until they are covered. The follow-up change `add-framework-context` will add NIST Part 1 chunks and EU chapter/section context.
+
 ## Capabilities
 
 ### New Capabilities

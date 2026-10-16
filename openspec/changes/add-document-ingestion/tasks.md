@@ -2,41 +2,42 @@
 
 ## 1. Setup
 
-- [ ] 1.1 Add runtime dependencies with `uv add pypdf beautifulsoup4` and verify `uv sync --locked` succeeds and both appear in `uv.lock`
+- [ ] 1.1 Add runtime dependencies with `uv add pypdf beautifulsoup4` (no extras) and verify `uv sync --locked` succeeds and both appear in `uv.lock`; record the locked versions in design.md Decision 10
 - [ ] 1.2 Register the `network` pytest marker and `addopts = "-m 'not network'"` in `pyproject.toml`, and verify `uv run pytest` still passes the smoke test
 
 ## 2. Chunk model and output
 
-- [ ] 2.1 Create `chunks.py` with the frozen `Chunk` dataclass (seven fields) and verify a unit test that builds one and reads its fields
-- [ ] 2.2 Add the atomic JSONL writer and the expected-count check, and verify unit tests for: one JSON object per line, field order stable, non-ASCII kept, a count mismatch raises without touching an existing file
+- [ ] 2.1 Create `errors.py` (`IngestError`) and `chunks.py` with the frozen `Chunk` dataclass (seven fields), and verify a unit test that builds one and reads its fields
+- [ ] 2.2 Add the per-source count check and the atomic JSONL writer, and verify unit tests for: one JSON object per line, stable field order, non-ASCII kept, a count mismatch raising `IngestError` with the source and both counts while a pre-existing file stays byte-identical
 
 ## 3. Source download and cache
 
-- [ ] 3.1 Create `sources.py` with the two `Source` records (URLs, headers, citation URL, version, filename, pinned SHA-256 from design.md) and verify a test that both records are present with 64-character hex checksums
-- [ ] 3.2 Implement fetch-and-verify with a temporary file, hash check, and `os.replace`, and verify monkeypatched tests: matching download is saved, mismatch raises with both hashes and leaves the existing file, network error/non-2xx leaves no partial file
-- [ ] 3.3 Implement cache reuse and `refresh`, and verify monkeypatched tests: a valid cache makes no network call, a corrupt cache raises with a `--refresh` hint, `refresh=True` downloads again
+- [ ] 3.1 Create `sources.py` with the `Source` dataclass and the two records (URLs, User-Agent and Accept headers, citation URL builder, version, filename, pinned SHA-256, `max_bytes`, expected counts from design.md), and verify a test that both records are present with 64-character hex checksums and no personal data in headers
+- [ ] 3.2 Implement fetch-and-verify (status 200 only, non-empty, chunked read with `max_bytes`, hash in memory, `mkstemp` + `os.replace`, cleanup in `finally`, urllib errors wrapped in `IngestError`), and verify monkeypatched tests for: match saved; mismatch raises with both hashes and leaves the cached file; network error, 202, empty body, oversized body, and an interruption mid-read each leave no file in `raw/`
+- [ ] 3.3 Implement cache reuse and `refresh` (cached bytes read once, verified, returned for parsing), and verify monkeypatched tests: a valid cache makes no network call, a partial cache downloads only the missing source, a corrupt cache raises with a `--refresh` hint, `refresh=True` downloads again
 
 ## 4. EU AI Act parser
 
-- [ ] 4.1 Add `tests/fixtures/eu_ai_act_sample.xhtml` (hand-made: two articles, one annex with a numbered table row, one recital) and verify it is under 5 KB
-- [ ] 4.2 Implement `eu_ai_act.py` (articles, annexes, title extraction, table-row joining, whitespace cleanup, recitals skipped) and verify fixture tests for `section_id`, `title`, `id`, no markup, numbered point on one line, and no recital text
+- [ ] 4.1 Add `tests/fixtures/eu_ai_act_sample.xhtml` (hand-made: two articles with U+00A0 in headings, one annex with a numbered table row, one recital) and verify it is under 5 KB
+- [ ] 4.2 Implement `eu_ai_act.py` (articles, annexes, `clean()` per field and per text block, headings excluded from text, table-row joining, provision-anchor URLs, recitals skipped), and verify fixture tests for exact `section_id`, `title`, `id`, `url`, no markup or U+00A0, text not starting with the heading, a multi-paragraph article keeping "\n\n" between paragraphs, numbered point on one line, and no recital text
 
 ## 5. NIST AI RMF parser
 
-- [ ] 5.1 Add `tests/fixtures/nist_ai_rmf_sample.txt` (two categories, three subcategories, one hyphen break, one page-footer block between lines of a statement)
-- [ ] 5.2 Implement the text-to-chunks function (furniture removal, hyphen rejoin, category/subcategory boundaries, parent-category title) and verify fixture tests for hyphen rejoined, footer removed, statement-only text, and title
-- [ ] 5.3 Add the pypdf extraction wrapper and verify it is covered by the network tests in group 7
+- [ ] 5.1 Add `tests/fixtures/nist_ai_rmf_sample.txt` modeled on the real layout (two functions; a section heading and intro after the first table; a page break with furniture; a category-overflow line after a page break; a soft hyphen; a `context-` compound; a `theMAP` join; the `6. AI RMF Profiles` end marker)
+- [ ] 5.2 Implement `parse_text` (region markers, furniture, section-heading skip, category and subcategory lines, category overflow, repair rules, title, prefix removal), and verify fixture tests for each rule, plus a test that a missing end marker raises `IngestError`
+- [ ] 5.3 Add the pypdf extraction wrapper and verify a network test that extracting the real PDF yields 72 `FUNCTION N.N:` lines
 
 ## 6. CLI
 
-- [ ] 6.1 Create `cli.py` with `main(argv=None)`, the `ingest` subcommand, `--refresh`, a per-source summary, and `IngestError` → stderr + exit 1, then point the `__init__.main` entry point at it. Verify tests: no subcommand prints help and exits 0, a failure exits 1 with the message, a successful run with monkeypatched sources writes the chunk file and prints counts
-- [ ] 6.2 Update `tests/test_main.py` for the new no-subcommand behavior and verify `uv run pytest` passes
-- [ ] 6.3 Add a "Usage" section to README.md (`uv run ai-governance ingest`, `--refresh`, where output goes, `uv run pytest -m network`) and verify the commands run as written
+- [ ] 6.1 Create `cli.py` with `main(argv=None) -> int`, the `ingest` subcommand, `--refresh`, `--data-dir`, a per-source summary, and `IngestError` → stderr + return 1; point `__init__.main` at it; update `tests/test_main.py` for the no-subcommand help. Verify `uv run pytest` passes, including tests for: no subcommand prints help and returns 0, a failure returns 1 with the message
+- [ ] 6.2 Add offline end-to-end tests with fixture `Source` records, and verify: a successful run writes `chunks.jsonl` and prints counts per source; a count mismatch returns 1 and leaves a pre-existing `chunks.jsonl` byte-identical; two runs in separate temp dirs produce identical bytes
+- [ ] 6.3 Add a "Usage" section to README.md (run from the repo root, `uv run ai-governance ingest`, `--refresh`, where output goes, `uv run pytest -m network`) and verify the commands run as written
 
 ## 7. Full-document checks
 
-- [ ] 7.1 Add `@pytest.mark.network` tests against the real files: 113 articles + 13 annexes, 72 subcategories split 19/18/22/13, 198 lines total, unique ids, Article 6 and GOVERN 1.1 metadata, "integrated" in GOVERN 1.2, no page furniture in any NIST chunk, no recital text in any chunk. Verify `uv run pytest -m network` passes locally
-- [ ] 7.2 Run `uv run ai-governance ingest` twice and verify both runs produce byte-identical `data/chunks.jsonl` (compare with `shasum`), the second run reports both files as cached, and `git status` is clean
+- [ ] 7.1 Add `@pytest.mark.network` tests using a session-scoped fixture that downloads both files once into `tmp_path_factory`. Assert: `section_id`s exactly "Article 1".."Article 113" and "Annex I".."Annex XIII" in order; 72 subcategories split 19/18/22/13; 198 lines in article → annex → NIST order; all seven fields non-empty strings; unique ids; the exact Article 6, Annex III, and GOVERN 1.1 metadata from the spec; the GOVERN 4 title and GOVERN 4.1 ending; GOVERN 6.2, MAP 5.2, MEASURE 4.3, and MANAGE 4.3 endings; "integrated", "context-specific", "context-relevant", and "the MAP function"; no furniture strings in any NIST chunk; no whitespace-normalized `rct_N` text in any chunk. Verify `uv run pytest -m network` passes locally
+- [ ] 7.2 Run `uv run ai-governance ingest` twice from the repo root and verify both runs produce byte-identical `data/chunks.jsonl` (compare with `shasum`), the second run reports both files as cached, and `git status` is clean
+- [ ] 7.3 Open the Article 6 and Annex III chunk `url`s in a browser and verify each lands on that provision; if the anchor doesn't survive the redirect, record it in review.md and raise it before archive
 
 ## 8. Review
 
