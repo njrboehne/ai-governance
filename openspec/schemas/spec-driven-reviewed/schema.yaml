@@ -274,12 +274,34 @@ artifacts:
 
   - id: review-plan
     generates: review-plan.md
-    description: Human sign-off on proposal, specs, design, and tasks before implementation
+    description: Adversarial persona review loop on the plan, then human sign-off
     template: review-plan.md
     instruction: |
-      Record a human review of the plan. Fill in reviewer, date, and decision
-      (approved / changes requested), and list changes made as a result.
-      Never mark the plan approved on the reviewer's behalf.
+      Run the plan-stage review loop, then hand the report to the human.
+
+      1. Read openspec/reviewers/README.md. It defines the roles, the loop
+         (at most 3 rounds), the guardrails, the outcomes, and the report.
+         Follow it exactly. You are the author.
+      2. Personas: every other .md file in openspec/reviewers/ whose
+         frontmatter `stages` includes `plan`.
+      3. Inputs: this change's proposal.md, specs/, design.md, and tasks.md.
+         If `git status` shows uncommitted changes to them, tell the human
+         and recommend committing first, so the loop's edits show up as a
+         clean diff.
+      4. Run the loop. Use a separate, fresh agent for each persona in each
+         round if your tool supports it. Between rounds, fix or rebut every
+         open finding, editing the plan files directly, but never in a way
+         the guardrails say must be escalated.
+      5. Write review-plan.md from the template as the report. Run
+         `openspec validate <change> --strict` after the last edit and say
+         in the report whether it passes.
+      6. Leave Reviewer, Date, Decision, every escalated finding's Decision,
+         and the Checked boxes empty. Never sign off for the human.
+      7. Tell the human: rounds run, counts by outcome, and each escalated
+         finding in one line. Then stop.
+
+      If no persona files exist, write "N/A: no personas" under Summary and
+      leave the rest of the template for the human.
     requires:
       - tasks
 
@@ -287,5 +309,25 @@ apply:
   requires: [review-plan]
   tracks: tasks.md
   instruction: |
+    Before starting, read review-plan.md. Stop and tell the human if any of
+    these are true:
+    - Decision is not "Approved"
+    - Reviewer or Date is empty
+    - Any escalated finding has an empty Decision
+    The artifact exists as soon as the loop writes its report, so this check
+    is what enforces human sign-off. If the human's decisions require plan
+    changes, make them and note them in review-plan.md before starting.
+
     Read context files, work through pending tasks, mark complete as you go.
     Pause if you hit blockers or need clarification.
+
+    When you reach the Review group: run the implementation-stage review
+    loop from openspec/reviewers/README.md (personas whose `stages` include
+    `implementation`; inputs are the plan files, `git diff main...HEAD`, and
+    test output). You are the author: fix code or rebut, re-running tests
+    after each round of fixes. Write the report to review.md in the change
+    folder, using the same sections as the review-plan template, plus the
+    scenario → test mapping and the other items the Review group asks for.
+    Tick only the Review boxes verified by a command you ran (tests, CI,
+    validate, git status). Leave escalated decisions and the boxes that need
+    human judgment for the human.

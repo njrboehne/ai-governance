@@ -21,5 +21,5 @@
 - [ ] 3.7 Any new dependency is justified in design.md and locked in uv.lock
 - [ ] 3.8 README updated if setup or usage changed
 - [ ] 3.9 If an eval set exists: precision/recall recorded in review.md and not worse than the last archived change. Otherwise note "N/A: no eval set" in review.md
-- [ ] 3.10 If reviewer personas exist in openspec/reviewers/: each finding accepted or rejected with a reason in review.md. Otherwise note "N/A: no personas" in review.md
+- [ ] 3.10 Implementation-stage review loop (openspec/reviewers/README.md) run and its report is in review.md; every escalated finding has a human Decision. If no personas exist, note "N/A: no personas" in review.md
 
