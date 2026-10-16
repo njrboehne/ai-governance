@@ -2,6 +2,7 @@
 name: Test / QA
 prefix: QA
 stages: [plan, implementation]
+applies_when: any change with spec scenarios or tests
 ---
 
 # Test / QA

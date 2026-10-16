@@ -2,6 +2,7 @@
 name: Senior engineer
 prefix: SE
 stages: [plan, implementation]
+applies_when: any change to code, design, or tasks
 ---
 
 # Senior engineer

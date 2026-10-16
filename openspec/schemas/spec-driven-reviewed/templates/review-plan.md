@@ -20,6 +20,8 @@
 ## Summary
 
 Rounds run: <!-- 1-3 -->
+Reviewer passes: <!-- e.g. R1: 4, R2: 2 (smaller model), R3: 1 -->
+Skipped personas: <!-- name: reason, or "None" -->
 
 | Persona | Fixed | Withdrawn | Escalated | Noted |
 |---|---|---|---|---|

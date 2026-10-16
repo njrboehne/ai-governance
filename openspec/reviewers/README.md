@@ -7,7 +7,7 @@ Each file in this folder (except this one) is a reviewer persona. Personas run a
 | `plan` | Creating the `review-plan` artifact, before implementation | proposal.md, specs/, design.md, tasks.md, and any repo files they reference | `review-plan.md` |
 | `implementation` | The Review group at the end of tasks.md | The plan files above, plus `git diff main...HEAD`, test output, and CI status | `review.md` |
 
-A persona runs at a stage only if that stage is listed in its `stages` frontmatter.
+A persona runs at a stage only if that stage is listed in its `stages` frontmatter **and** its `applies_when` describes something this change touches. If a persona is skipped, list it in the report's Summary with the reason.
 
 ## Roles
 
@@ -27,7 +27,7 @@ The loop runs at most **3 rounds** and stops early when no findings are open.
 
 At the implementation stage, the author re-runs tests after fixing. A fix that breaks tests doesn't count.
 
-**Rounds 2 and 3: re-review.** Start a fresh pass for each persona. It gets the current files, the full findings ledger (every persona's findings, the author's answers, and the changes made), and its own earlier findings. For each of its open findings it gives one verdict:
+**Rounds 2 and 3: re-review.** Start a fresh pass only for personas that still have open findings, or whose focus covers a change made in the last round. Everyone else is done. A re-review pass gets a small input, not the whole plan again: its own open findings, the author's answers, the ledger rows for the other personas, and only the sections of the files that changed. If your tool lets you choose, use a smaller, cheaper model for re-review passes, since judging an answer is narrower than finding problems. Round 1 keeps the stronger model. For each of its open findings the reviewer gives one verdict:
 - **Resolved:** the fix works, or the rebuttal holds.
 - **Not resolved:** a counter-argument that answers the author's point, not a repeat of the original finding.
 
@@ -79,7 +79,7 @@ Each finding ends with one of these outcomes:
 Fill the stage's report file (`review-plan.md` or `review.md`) from its template:
 
 1. **Escalated:** one block per escalated finding, giving the reviewer's position, the author's position, the options, the author's recommendation, and an empty **Decision** line for the human.
-2. **Summary:** rounds run, and the count of each outcome per persona.
+2. **Summary:** rounds run, reviewer passes run per round (and which model, if a smaller one was used), personas skipped and why, and the count of each outcome per persona.
 3. **Findings ledger:** one row per finding, with ID, severity, persona, finding, rounds, outcome, and resolution (what changed or why it was withdrawn).
 4. **Changes made during review:** each edit with the file and the finding IDs it answers.
 5. **Round log:** per round, each finding's exchange in a line or two (finding → author → verdict).
@@ -96,4 +96,4 @@ A plan can't be marked Approved, and a change can't be archived, while any escal
 
 ## Adding a persona
 
-Copy an existing file, give it a new `prefix`, and set its `stages`. Keep the Focus list short and specific, and add a "Leave to others" line so personas don't overlap.
+Copy an existing file, give it a new `prefix`, and set its `stages` and `applies_when`. Keep the Focus list short and specific, and add a "Leave to others" line so personas don't overlap.

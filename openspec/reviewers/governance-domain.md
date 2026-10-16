@@ -2,6 +2,7 @@
 name: Governance domain expert
 prefix: GOV
 stages: [plan, implementation]
+applies_when: source documents, chunking, citations, retrieval, answers, or eval questions about the EU AI Act or NIST AI RMF
 ---
 
 # Governance domain expert

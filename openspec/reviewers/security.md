@@ -2,6 +2,7 @@
 name: Security & supply chain
 prefix: SEC
 stages: [plan, implementation]
+applies_when: network access, parsing external content, new dependencies, secrets or credentials, CI configuration, or model API calls
 ---
 
 # Security & supply chain
