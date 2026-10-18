@@ -1,8 +1,8 @@
 # Plan Review
 
-- **Reviewer:** <!-- name of the human who signed off -->
-- **Date:** <!-- YYYY-MM-DD -->
-- **Decision:** <!-- Approved | Changes requested -->
+- **Reviewer:** Natalie Boehne
+- **Date:** 2026-10-18
+- **Decision:** Approved
 
 ## Escalated (needs your decision)
 
@@ -16,7 +16,7 @@
   - **C)** B, plus chunk NIST Part 1 sections (for example Section 3, one chunk per trustworthy characteristic). Larger, and it adds a third set of parsing rules.
 - **Author recommendation:** A now, and list B and C as candidate follow-up changes, letting the eval set decide which gaps matter. This keeps the first change small.
 - **Decision:**
-
+  - A now, add B and C to changes for follow up. 
 ## Summary
 
 Rounds run: 3
@@ -106,7 +106,7 @@ Only SE had open findings, so 1 pass. SE-13 and SE-14 were Resolved, with no new
 - Whether EU provision anchors survive the ELI redirect is tracked in task 7.3 (QA, GOV).
 
 ## Checked (human)
-- [ ] Escalated findings each have a Decision
-- [ ] Changes made during review match `git diff` and nothing in scope was dropped
-- [ ] Every requirement has at least one WHEN/THEN scenario specific enough to write a test from
-- [ ] Tasks include a final review group
+- [x] Escalated findings each have a Decision
+- [x] Changes made during review match `git diff` and nothing in scope was dropped
+- [x] Every requirement has at least one WHEN/THEN scenario specific enough to write a test from
+- [x] Tasks include a final review group
