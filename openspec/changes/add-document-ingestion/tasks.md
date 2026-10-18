@@ -2,8 +2,8 @@
 
 ## 1. Setup
 
-- [ ] 1.1 Add runtime dependencies with `uv add pypdf beautifulsoup4` (no extras) and verify `uv sync --locked` succeeds and both appear in `uv.lock`; record the locked versions in design.md Decision 10
-- [ ] 1.2 Register the `network` pytest marker and `addopts = "-m 'not network'"` in `pyproject.toml`, and verify `uv run pytest` still passes the smoke test
+- [x] 1.1 Add runtime dependencies with `uv add pypdf beautifulsoup4` (no extras) and verify `uv sync --locked` succeeds and both appear in `uv.lock`; record the locked versions in design.md Decision 10
+- [x] 1.2 Register the `network` pytest marker and `addopts = "-m 'not network'"` in `pyproject.toml`, and verify `uv run pytest` still passes the smoke test
 
 ## 2. Chunk model and output
 

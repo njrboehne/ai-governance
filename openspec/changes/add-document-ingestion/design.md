@@ -87,7 +87,7 @@ tests/
 - **Network tests** (`@pytest.mark.network`) share a session-scoped fixture that downloads both real files once through `sources.py` into `tmp_path_factory`. `pyproject.toml` registers the marker and sets `addopts = "-m 'not network'"`, so CI skips them. Run them locally with `uv run pytest -m network`.
 
 **10. New dependencies.**
-`pypdf` (pure Python, maintained, the usual choice for PDF text; install without the `crypto` extra) and `beautifulsoup4` (the standard HTML parser API; pulls in the pure-Python `soupsieve`). Both are added with `uv add` and locked in `uv.lock`. Record the locked versions here when implementing.
+`pypdf` (pure Python, maintained, the usual choice for PDF text; install without the `crypto` extra) and `beautifulsoup4` (the standard HTML parser API; pulls in the pure-Python `soupsieve`). Both are added with `uv add` and locked in `uv.lock`: pypdf 6.21.1, beautifulsoup4 4.15.0.
 
 ## Risks / Trade-offs
 
