@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from ai_governance.errors import IngestError
 from ai_governance.eu_ai_act import parse
 
 FIXTURE = Path(__file__).parent / "fixtures" / "eu_ai_act_sample.xhtml"
@@ -85,3 +86,28 @@ def test_trailing_punctuation_joins_previous_block(by_id):
 
 def test_recitals_skipped(chunks):
     assert not any("recital" in c.text for c in chunks)
+
+
+def parse_fixture(xhtml: str):
+    return parse(xhtml.encode(), version="v1", cite=lambda anchor: anchor)
+
+
+def test_article_without_title_raises():
+    xhtml = '<div id="art_1"><p class="oj-ti-art">Article 1</p></div>'
+    with pytest.raises(IngestError, match="art_1 has no p.oj-sti-art"):
+        parse_fixture(xhtml)
+
+
+def test_annex_without_title_raises():
+    xhtml = '<div id="anx_I"><p class="oj-doc-ti">ANNEX I</p></div>'
+    with pytest.raises(IngestError, match="anx_I has no p.oj-doc-ti"):
+        parse_fixture(xhtml)
+
+
+def test_unexpected_heading_raises():
+    xhtml = (
+        '<div id="art_1"><p class="oj-ti-art">Article 1 bis</p>'
+        '<p class="oj-sti-art">Title</p></div>'
+    )
+    with pytest.raises(IngestError, match="unexpected heading 'Article 1 bis'"):
+        parse_fixture(xhtml)

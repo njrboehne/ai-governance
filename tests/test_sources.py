@@ -166,10 +166,17 @@ def test_interrupted_save_leaves_no_temp_file(tmp_path, monkeypatch):
     def interrupt(src, dst):
         raise KeyboardInterrupt
 
-    monkeypatch.setattr(sources.os, "replace", interrupt)
+    monkeypatch.setattr("ai_governance.chunks.os.replace", interrupt)
     with pytest.raises(KeyboardInterrupt):
         fetch(make_source(), tmp_path)
     assert files_in(tmp_path) == []
+
+
+def test_unwritable_raw_dir_raises_ingest_error(tmp_path, monkeypatch):
+    serve(monkeypatch)
+    (tmp_path / "raw").write_text("a file where the directory should be")
+    with pytest.raises(IngestError, match="Test Source: cannot save"):
+        fetch(make_source(), tmp_path / "raw")
 
 
 # 3.3 Cache reuse and refresh
@@ -198,6 +205,12 @@ def test_corrupt_cache_raises_with_refresh_hint(tmp_path, monkeypatch):
     with pytest.raises(IngestError, match="--refresh"):
         fetch(make_source(), tmp_path)
     assert calls == []
+
+
+def test_unreadable_cache_raises_ingest_error(tmp_path, monkeypatch):
+    (tmp_path / "doc.xhtml").mkdir()
+    with pytest.raises(IngestError, match="Test Source: cannot read cached file"):
+        fetch(make_source(), tmp_path)
 
 
 def test_refresh_downloads_again(tmp_path, monkeypatch):

@@ -39,12 +39,17 @@ def _format_counts(counts: dict[str, int]) -> str:
 
 def write_jsonl(chunks: list[Chunk], path: Path) -> None:
     """Write one JSON object per line, replacing `path` only once the whole file is written."""
+    lines = (json.dumps(asdict(chunk), ensure_ascii=False) + "\n" for chunk in chunks)
+    atomic_write(path, "".join(lines).encode("utf-8"))
+
+
+def atomic_write(path: Path, data: bytes) -> None:
+    """Write to a temporary file next to `path`, then move it into place."""
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
     try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
-            for chunk in chunks:
-                f.write(json.dumps(asdict(chunk), ensure_ascii=False) + "\n")
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
         os.replace(tmp, path)
     finally:
         if os.path.exists(tmp):

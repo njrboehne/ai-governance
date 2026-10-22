@@ -1,8 +1,6 @@
 """The two source documents: where they come from, and fetching them into a verified cache."""
 
 import hashlib
-import os
-import tempfile
 import urllib.error
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -11,7 +9,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 from . import eu_ai_act, nist_ai_rmf
-from .chunks import Chunk
+from .chunks import Chunk, atomic_write
 from .errors import IngestError
 
 USER_AGENT = "ai-governance/0.1 (+https://github.com/njrboehne/ai-governance)"
@@ -82,7 +80,10 @@ def fetch(source: Source, raw_dir: Path, refresh: bool = False) -> tuple[bytes, 
     """Return the source's verified bytes and "cached" or "downloaded"."""
     path = raw_dir / source.filename
     if path.exists() and not refresh:
-        data = path.read_bytes()
+        try:
+            data = path.read_bytes()
+        except OSError as e:
+            raise IngestError(f"{source.name}: cannot read cached file {path}: {e}") from e
         actual = _sha256(data)
         if actual != source.sha256:
             raise IngestError(
@@ -100,7 +101,10 @@ def fetch(source: Source, raw_dir: Path, refresh: bool = False) -> tuple[bytes, 
             f"(expected {source.sha256}, got {actual}). The source may have changed upstream; "
             "if it has not, something on the network may be altering it."
         )
-    _save(data, path)
+    try:
+        atomic_write(path, data)
+    except OSError as e:
+        raise IngestError(f"{source.name}: cannot save {path}: {e}") from e
     return data, "downloaded"
 
 
@@ -126,18 +130,6 @@ def _download(source: Source) -> bytes:
     if size == 0:
         raise IngestError(f"{source.name}: download failed: empty response")
     return b"".join(blocks)
-
-
-def _save(data: bytes, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
-    try:
-        with os.fdopen(fd, "wb") as f:
-            f.write(data)
-        os.replace(tmp, path)
-    finally:
-        if os.path.exists(tmp):
-            os.remove(tmp)
 
 
 def _sha256(data: bytes) -> str:
