@@ -32,7 +32,7 @@ The download starts at the `https://` Cellar URL above, because EUR-Lex blocks s
 *Alternatives:* scraping EUR-Lex with browser headers (fragile, and it works around a deliberate block); the PDF (loses the article markup); rewriting redirects to HTTPS (unverified endpoint behavior).
 
 **2. Each source is one record holding all of its facts.**
-A frozen `Source` dataclass holds: name, download URL, request headers, citation URL builder, version string, filename, expected SHA-256, `max_bytes`, expected chunk counts, and a `parse(bytes) -> list[Chunk]` function. Tests build their own `Source` records from fixture bytes (with checksums computed from those bytes and fixture-sized counts), so the whole pipeline runs offline. Values from the probe:
+A frozen `Source` dataclass holds: name, download URL, request headers, citation URL builder, version string, filename, expected SHA-256, `max_bytes`, expected chunk counts, and the source's parser. `Source.chunks(data)` calls the parser with the record's own `version` and `cite`, so each fact is stored once. Tests build their own `Source` records from fixture bytes (with checksums computed from those bytes and fixture-sized counts), so the whole pipeline runs offline. Values from the probe:
 - EU AI Act: SHA-256 `8f0b656302f9864cc87e040c371f209a9d65ae1a6cecc25ca5eb737e872d721a`, `max_bytes` 3 MB, counts {article: 113, annex: 13}, version "OJ L, 2024/1689, 12.7.2024 (original text, not consolidated)"
 - NIST AI RMF: SHA-256 `7576edb531d9848825814ee88e28b1795d3a84b435b4b797d3670eafdc4a89f1`, `max_bytes` 4 MB, counts {govern: 19, map: 18, measure: 22, manage: 13}, url "https://doi.org/10.6028/NIST.AI.100-1", version "NIST AI 100-1, January 2023 (AI RMF 1.0)"
 
