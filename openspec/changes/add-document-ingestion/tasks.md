@@ -12,9 +12,9 @@
 
 ## 3. Source download and cache
 
-- [ ] 3.1 Create `sources.py` with the `Source` dataclass and the two records (URLs, User-Agent and Accept headers, citation URL builder, version, filename, pinned SHA-256, `max_bytes`, expected counts from design.md), and verify a test that both records are present with 64-character hex checksums and no personal data in headers
-- [ ] 3.2 Implement fetch-and-verify (status 200 only, non-empty, chunked read with `max_bytes`, hash in memory, `mkstemp` + `os.replace`, cleanup in `finally`, urllib errors wrapped in `IngestError`), and verify monkeypatched tests for: match saved; mismatch raises with both hashes and leaves the cached file; network error, 202, empty body, oversized body, and an interruption mid-read each leave no file in `raw/`
-- [ ] 3.3 Implement cache reuse and `refresh` (cached bytes read once, verified, returned for parsing), and verify monkeypatched tests: a valid cache makes no network call, a partial cache downloads only the missing source, a corrupt cache raises with a `--refresh` hint, `refresh=True` downloads again
+- [x] 3.1 Create `sources.py` with the `Source` dataclass and the two records (URLs, User-Agent and Accept headers, citation URL builder, version, filename, pinned SHA-256, `max_bytes`, expected counts from design.md), and verify a test that both records are present with 64-character hex checksums and no personal data in headers
+- [x] 3.2 Implement fetch-and-verify (status 200 only, non-empty, chunked read with `max_bytes`, hash in memory, `mkstemp` + `os.replace`, cleanup in `finally`, urllib errors wrapped in `IngestError`), and verify monkeypatched tests for: match saved; mismatch raises with both hashes and leaves the cached file; network error, 202, empty body, oversized body, and an interruption mid-read each leave no file in `raw/`
+- [x] 3.3 Implement cache reuse and `refresh` (cached bytes read once, verified, returned for parsing), and verify monkeypatched tests: a valid cache makes no network call, a partial cache downloads only the missing source, a corrupt cache raises with a `--refresh` hint, `refresh=True` downloads again
 
 ## 4. EU AI Act parser
 
