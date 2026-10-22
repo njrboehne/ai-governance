@@ -23,8 +23,8 @@
 
 ## 5. NIST AI RMF parser
 
-- [ ] 5.1 Add `tests/fixtures/nist_ai_rmf_sample.txt` modeled on the real layout (two functions; a section heading and intro after the first table; a page break with furniture; a category-overflow line after a page break; a soft hyphen; a `context-` compound; a `theMAP` join; the `6. AI RMF Profiles` end marker)
-- [ ] 5.2 Implement `parse_text` (region markers, furniture, section-heading skip, category and subcategory lines, category overflow, repair rules, title, prefix removal), and verify fixture tests for each rule, plus a test that a missing end marker raises `IngestError`
+- [x] 5.1 Add `tests/fixtures/nist_ai_rmf_sample.txt` modeled on the real layout (two functions; a section heading and intro after the first table; a page break with furniture; a category-overflow line after a page break; a soft hyphen; a `context-` compound; a `theMAP` join; the `6. AI RMF Profiles` end marker)
+- [x] 5.2 Implement `parse_text` (region markers, furniture, section-heading skip, category and subcategory lines, category overflow, repair rules, title, prefix removal), and verify fixture tests for each rule, plus a test that a missing end marker raises `IngestError`
 - [ ] 5.3 Add the pypdf extraction wrapper and verify a network test that extracting the real PDF yields 72 `FUNCTION N.N:` lines
 
 ## 6. CLI

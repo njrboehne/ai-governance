@@ -1,0 +1,48 @@
+Practices related to governing AI risks are described in the NIST AI RMF Playbook. Table
+1 lists the GOVERN function's categories and subcategories.
+Table 1: Categories and subcategories for the GOVERN function.
+GOVERN 1:
+Policies are in
+place.
+GOVERN 1.1: Legal and regulatory requirements involving AI
+are understood, managed, and documented.
+GOVERN 1.2: The characteristics of trustworthy AI are inte-
+grated into organizational policies.
+Categories Subcategories
+Continued on next page
+Page 22
+NIST AI 100-1 AI RMF 1.0
+Table 1: Categories and subcategories for the GOVERN function. (Continued)
+GOVERN 4:
+Organizational
+teams are committed
+GOVERN 4.1: Organizational practices are in place to minimize
+potential negative impacts.
+Categories Subcategories
+Continued on next page
+Page 23
+NIST AI 100-1 AI RMF 1.0
+Table 1: Categories and subcategories for the GOVERN function. (Continued)
+to a culture that
+communicates AI
+risk.
+GOVERN 4.2: Teams use outputs of theMAP function.
+Categories Subcategories
+5.2 Map
+The MAP function establishes the context to frame risks related to an AI system.
+Page 24
+NIST AI 100-1 AI RMF 1.0
+Outcomes in the MAP function are the basis for the MEASURE and MANAGE functions.
+Practices related to mapping AI risks are described in the NIST AI RMF Playbook. Table
+2 lists the MAP function's categories and subcategories.
+Page 25
+NIST AI 100-1 AI RMF 1.0
+Table 2: Categories and subcategories for the MAP function.
+MAP 1: Context is
+established.
+MAP 1.1: Intended purposes, context-
+specific laws, and prospective settings are understood and docu-
+mented.
+Categories Subcategories
+6. AI RMF Profiles
+AI RMF use-case profiles are implementations of the AI RMF functions.
