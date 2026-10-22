@@ -10,7 +10,7 @@ DOI = "https://doi.org/10.6028/NIST.AI.100-1"
 
 
 def parse(text: str):
-    return parse_text(text, version="v1", url=DOI)
+    return parse_text(text, version="v1", cite=lambda section_id: DOI)
 
 
 @pytest.fixture(scope="module")

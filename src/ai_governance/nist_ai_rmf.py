@@ -2,6 +2,7 @@
 
 import io
 import re
+from collections.abc import Callable
 
 import pypdf
 
@@ -24,8 +25,8 @@ FURNITURE = re.compile(
 KEEP_HYPHEN = {"context"}
 
 
-def parse(data: bytes, *, version: str, url: str) -> list[Chunk]:
-    return parse_text(extract_text(data), version=version, url=url)
+def parse(data: bytes, *, version: str, cite: Callable[[str], str]) -> list[Chunk]:
+    return parse_text(extract_text(data), version=version, cite=cite)
 
 
 def extract_text(data: bytes) -> str:
@@ -33,7 +34,7 @@ def extract_text(data: bytes) -> str:
     return "\n".join(page.extract_text() for page in reader.pages)
 
 
-def parse_text(text: str, *, version: str, url: str) -> list[Chunk]:
+def parse_text(text: str, *, version: str, cite: Callable[[str], str]) -> list[Chunk]:
     """Walk the Core tables line by line, collecting category and subcategory statements."""
     lines = _core_region(text.splitlines())
     categories: dict[str, list[str]] = {}
@@ -67,7 +68,7 @@ def parse_text(text: str, *, version: str, url: str) -> list[Chunk]:
             source=SOURCE,
             section_id=section_id,
             title=f"{category}: {repair(categories[category])}",
-            url=url,
+            url=cite(section_id),
             version=version,
             text=repair(statement),
         )

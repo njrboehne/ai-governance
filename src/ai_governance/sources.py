@@ -4,7 +4,6 @@ import hashlib
 import urllib.error
 from collections.abc import Callable
 from dataclasses import dataclass
-from functools import partial
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -29,19 +28,19 @@ class Source:
     sha256: str
     max_bytes: int
     expected_counts: dict[str, int]
-    parse: Callable[[bytes], list[Chunk]]
+    parse: Callable[..., list[Chunk]]
+
+    def chunks(self, data: bytes) -> list[Chunk]:
+        return self.parse(data, version=self.version, cite=self.cite)
 
 
 def _eli_url(anchor: str) -> str:
     return f"http://data.europa.eu/eli/reg/2024/1689/oj#{anchor}"
 
 
-def _nist_url(anchor: str) -> str:
+def _nist_url(section_id: str) -> str:
     return "https://doi.org/10.6028/NIST.AI.100-1"
 
-
-EU_VERSION = "OJ L, 2024/1689, 12.7.2024 (original text, not consolidated)"
-NIST_VERSION = "NIST AI 100-1, January 2023 (AI RMF 1.0)"
 
 EU_AI_ACT = Source(
     name=eu_ai_act.SOURCE,
@@ -52,12 +51,12 @@ EU_AI_ACT = Source(
         "Accept-Language": "eng",
     },
     cite=_eli_url,
-    version=EU_VERSION,
+    version="OJ L, 2024/1689, 12.7.2024 (original text, not consolidated)",
     filename="eu-ai-act-2024-1689.xhtml",
     sha256="8f0b656302f9864cc87e040c371f209a9d65ae1a6cecc25ca5eb737e872d721a",
     max_bytes=3 * MB,
     expected_counts={"article": 113, "annex": 13},
-    parse=partial(eu_ai_act.parse, version=EU_VERSION, cite=_eli_url),
+    parse=eu_ai_act.parse,
 )
 
 NIST_AI_RMF = Source(
@@ -65,12 +64,12 @@ NIST_AI_RMF = Source(
     download_url="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
     headers={"User-Agent": USER_AGENT, "Accept": "application/pdf"},
     cite=_nist_url,
-    version=NIST_VERSION,
+    version="NIST AI 100-1, January 2023 (AI RMF 1.0)",
     filename="nist-ai-100-1.pdf",
     sha256="7576edb531d9848825814ee88e28b1795d3a84b435b4b797d3670eafdc4a89f1",
     max_bytes=4 * MB,
     expected_counts={"govern": 19, "map": 18, "measure": 22, "manage": 13},
-    parse=partial(nist_ai_rmf.parse, version=NIST_VERSION, url=_nist_url("")),
+    parse=nist_ai_rmf.parse,
 )
 
 SOURCES = [EU_AI_ACT, NIST_AI_RMF]

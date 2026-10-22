@@ -73,11 +73,18 @@ def test_headers_identify_the_project_not_a_person(source):
 
 def test_citation_urls():
     assert EU_AI_ACT.cite("art_6") == "http://data.europa.eu/eli/reg/2024/1689/oj#art_6"
-    assert NIST_AI_RMF.cite("") == "https://doi.org/10.6028/NIST.AI.100-1"
+    assert NIST_AI_RMF.cite("GOVERN 1.1") == "https://doi.org/10.6028/NIST.AI.100-1"
 
 
 def test_expected_counts_total_198():
     assert sum(sum(s.expected_counts.values()) for s in SOURCES) == 198
+
+
+def test_chunks_use_the_record_version_and_citation():
+    source = replace(EU_AI_ACT, version="test version", cite=lambda anchor: f"cite:{anchor}")
+    xhtml = b'<div id="art_1"><p class="oj-ti-art">Article 1</p><p class="oj-sti-art">T</p></div>'
+    [chunk] = source.chunks(xhtml)
+    assert (chunk.version, chunk.url) == ("test version", "cite:art_1")
 
 
 # 3.2 Fetch and verify
