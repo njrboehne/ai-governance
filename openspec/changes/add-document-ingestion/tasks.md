@@ -7,8 +7,8 @@
 
 ## 2. Chunk model and output
 
-- [ ] 2.1 Create `errors.py` (`IngestError`) and `chunks.py` with the frozen `Chunk` dataclass (seven fields), and verify a unit test that builds one and reads its fields
-- [ ] 2.2 Add the per-source count check and the atomic JSONL writer, and verify unit tests for: one JSON object per line, stable field order, non-ASCII kept, a count mismatch raising `IngestError` with the source and both counts while a pre-existing file stays byte-identical
+- [x] 2.1 Create `errors.py` (`IngestError`) and `chunks.py` with the frozen `Chunk` dataclass (seven fields), and verify a unit test that builds one and reads its fields
+- [x] 2.2 Add the per-source count check and the atomic JSONL writer, and verify unit tests for: one JSON object per line, stable field order, non-ASCII kept, a count mismatch raising `IngestError` with the source and both counts while a pre-existing file stays byte-identical
 
 ## 3. Source download and cache
 
