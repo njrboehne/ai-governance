@@ -18,8 +18,8 @@
 
 ## 4. EU AI Act parser
 
-- [ ] 4.1 Add `tests/fixtures/eu_ai_act_sample.xhtml` (hand-made: two articles with U+00A0 in headings, one annex with a numbered table row and a text-only table cell, one recital) and verify it is under 5 KB
-- [ ] 4.2 Implement `eu_ai_act.py` (articles, annexes, `clean()` per field and per text block, headings excluded from text, table-row joining, provision-anchor URLs, recitals skipped), and verify fixture tests for exact `section_id`, `title`, `id`, `url`, no markup or U+00A0, text not starting with the heading, a multi-paragraph article keeping "\n\n" between paragraphs, numbered point on one line, and no recital text
+- [x] 4.1 Add `tests/fixtures/eu_ai_act_sample.xhtml` (hand-made: two articles with U+00A0 in headings, one annex with a numbered table row and a text-only table cell, one recital) and verify it is under 5 KB
+- [x] 4.2 Implement `eu_ai_act.py` (articles, annexes, `clean()` per field and per text block, headings excluded from text, table-row joining, provision-anchor URLs, recitals skipped), and verify fixture tests for exact `section_id`, `title`, `id`, `url`, no markup or U+00A0, text not starting with the heading, a multi-paragraph article keeping "\n\n" between paragraphs, numbered point on one line, and no recital text
 
 ## 5. NIST AI RMF parser
 
