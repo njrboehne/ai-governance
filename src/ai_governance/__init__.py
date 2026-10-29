@@ -1,2 +1,3 @@
-def main() -> None:
-    print("ai-governance: in progress")
+from .cli import main
+
+__all__ = ["main"]
