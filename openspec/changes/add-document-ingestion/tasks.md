@@ -31,7 +31,7 @@
 
 - [x] 6.1 Create `cli.py` with `main(argv=None) -> int`, the `ingest` subcommand, `--refresh`, `--data-dir`, a per-source summary, and `IngestError` → stderr + return 1; point `__init__.main` at it; update `tests/test_main.py` for the no-subcommand help. Verify `uv run pytest` passes, including tests for: no subcommand prints help and returns 0, a failure returns 1 with the message
 - [x] 6.2 Add offline end-to-end tests with fixture `Source` records, and verify: a successful run writes `chunks.jsonl` and prints counts per source; a count mismatch returns 1 and leaves a pre-existing `chunks.jsonl` byte-identical; two runs in separate temp dirs produce identical bytes
-- [ ] 6.3 Add a "Usage" section to README.md (run from the repo root, `uv run ai-governance ingest`, `--refresh`, where output goes, `uv run pytest -m network`) and verify the commands run as written
+- [x] 6.3 Add a "Usage" section to README.md (run from the repo root, `uv run ai-governance ingest`, `--refresh`, where output goes, `uv run pytest -m network`) and verify the commands run as written
 
 ## 7. Full-document checks
 
