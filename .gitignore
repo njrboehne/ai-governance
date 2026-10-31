@@ -26,3 +26,6 @@ data/
 .vscode/
 .idea/
 .claude/
+
+# Private planning notes (symlinks to the Obsidian vault)
+private/
