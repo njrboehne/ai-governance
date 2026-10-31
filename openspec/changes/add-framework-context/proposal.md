@@ -2,14 +2,14 @@
 
 ## Why
 
-`add-document-ingestion` chunks only EU AI Act articles and annexes and NIST AI RMF subcategories. Questions about framework-level context have no chunk to answer them, for example "What are NIST's characteristics of trustworthy AI?" or "What does Chapter III cover?". This change fills those gaps if the eval set shows they matter.
+`add-document-ingestion` chunks only EU AI Act articles and annexes and NIST AI RMF subcategories. The checker has no framework text for framework-level context, for example NIST's characteristics of trustworthy AI (Part 1, Section 3) or the chapter an EU article sits in (needed to tell whether a high-risk obligation in Chapter III applies). This change fills those gaps if the eval set shows the checker misses findings because of them.
 
 ## What Changes
 
 - **EU AI Act:** add each article's chapter/section path (for example "Chapter III > Section 1") to its chunk as a new metadata field.
 - **NIST AI RMF:** add chunks for Part 1, for example one per trustworthy characteristic in Section 3.
 
-Not started until `add-document-ingestion` is archived and the eval set exists. The eval set's out-of-scope questions decide which of the two parts go ahead. Either part may be dropped.
+Not started until `add-document-ingestion` is archived and the eval set exists. Findings the eval set marks out of scope, or gaps the checker misses for lack of this context, decide which of the two parts go ahead. Either part may be dropped.
 
 ## Capabilities
 

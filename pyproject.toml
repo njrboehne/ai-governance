@@ -1,13 +1,16 @@
 [project]
 name = "ai-governance"
 version = "0.1.0"
-description = "Retrieval over NIST AI RMF and the EU AI Act, with cited answers and an evaluation set"
+description = "AI policy-vs-practice checker: compares specs and ADRs against NIST AI RMF and the EU AI Act, with cited findings"
 readme = "README.md"
 authors = [
     { name = "Natalie Boehne", email = "30935329+njrboehne@users.noreply.github.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "beautifulsoup4>=4.15.0",
+    "pypdf>=6.21.1",
+]
 
 [project.scripts]
 ai-governance = "ai_governance:main"
@@ -33,3 +36,5 @@ select = ["E", "F", "I", "B", "UP"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["network: downloads the real source documents (run with -m network)"]
+addopts = "-m 'not network'"
