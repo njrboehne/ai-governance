@@ -7,7 +7,7 @@ Each file in this folder (except this one) is a reviewer persona. Personas run a
 | `plan` | Creating the `review-plan` artifact, before implementation | proposal.md, specs/, design.md, tasks.md, and any repo files they reference | `review-plan.md` |
 | `implementation` | The Review group at the end of tasks.md | The plan files above, plus `git diff main...HEAD`, test output, and CI status | `review.md` |
 
-A persona runs at a stage only if that stage is listed in its `stages` frontmatter **and** its `applies_when` describes something this change touches. If a persona is skipped, list it in the report's Summary with the reason.
+A persona runs at a stage only if that stage is listed in its `stages` frontmatter **and** its `applies_when` describes something this change touches.
 
 ## Roles
 
@@ -27,7 +27,7 @@ The loop runs at most **3 rounds** and stops early when no findings are open.
 
 At the implementation stage, the author re-runs tests after fixing. A fix that breaks tests doesn't count.
 
-**Rounds 2 and 3: re-review.** Start a fresh pass only for personas that still have open findings, or whose focus covers a change made in the last round. Everyone else is done. A re-review pass gets a small input, not the whole plan again: its own open findings, the author's answers, the ledger rows for the other personas, and only the sections of the files that changed. If your tool lets you choose, use a smaller, cheaper model for re-review passes, since judging an answer is narrower than finding problems. Round 1 keeps the stronger model. For each of its open findings the reviewer gives one verdict:
+**Rounds 2 and 3: re-review.** Start a fresh pass only for personas that still have open findings, or whose focus covers a change made in the last round. Everyone else is done. A re-review pass gets a small input, not the whole plan again: its own open findings, the author's answers, the other personas' open findings, and only the sections of the files that changed. If your tool lets you choose, use a smaller, cheaper model for re-review passes, since judging an answer is narrower than finding problems. Round 1 keeps the stronger model. For each of its open findings the reviewer gives one verdict:
 - **Resolved:** the fix works, or the rebuttal holds.
 - **Not resolved:** a counter-argument that answers the author's point, not a repeat of the original finding.
 
@@ -39,10 +39,10 @@ Every persona may also **object to any change made in the last round**, includin
 
 - **Escalate scope changes, don't make them.** The author may not fix a finding by removing or weakening a requirement or scenario, widening what's out of scope, or loosening an expected value (a count, an error case). Any fix like that is escalated. The author can still make the requirement more precise.
 - **No giving in without a reason.** A reviewer marks a rebuttal Resolved only if it answers the concrete failure described. Saying the author's argument is "reasonable" is not enough.
-- **No new topics after round 1.** In rounds 2 and 3, reviewers may raise new findings only about changes made during the loop. Anything else is listed under "Noted for later" and doesn't block.
+- **No new topics after round 1.** In rounds 2 and 3, reviewers may raise new findings only about changes made during the loop. Anything else is dropped and doesn't block.
 - **Nits don't loop.** Nits are reported in round 1. The author fixes them or doesn't, and they never enter rounds 2–3 or escalation.
 - **Deadlocks go up.** If two reviewers want opposite things, the author doesn't pick a winner. The finding is escalated with both positions.
-- **Every edit is recorded.** Each change made during the loop is listed with the finding ID it answers, so the human can check the diff against the report.
+- **Every edit is traceable.** Edits made during the loop are committed with the finding IDs they answer in the commit message, not listed in the report.
 
 ## Severity
 
@@ -76,20 +76,12 @@ Each finding ends with one of these outcomes:
 
 ## The report
 
-Fill the stage's report file (`review-plan.md` or `review.md`) from its template:
-
-1. **Escalated:** one block per escalated finding, giving the reviewer's position, the author's position, the options, the author's recommendation, and an empty **Decision** line for the human.
-2. **Summary:** rounds run, reviewer passes run per round (and which model, if a smaller one was used), personas skipped and why, and the count of each outcome per persona.
-3. **Findings ledger:** one row per finding, with ID, severity, persona, finding, rounds, outcome, and resolution (what changed or why it was withdrawn).
-4. **Changes made during review:** each edit with the file and the finding IDs it answers.
-5. **Round log:** per round, each finding's exchange in a line or two (finding → author → verdict).
-6. **Noted for later**
+The report holds only what the loop couldn't resolve. In the stage's report file (`review-plan.md` or `review.md`), write one block per escalated finding, giving the reviewer's position, the author's position, the options, the author's recommendation, and an empty **Decision** line for the human. If nothing was escalated, write "None." Never add a summary, findings ledger, change list, round log, or nits.
 
 ## Human sign-off
 
 The human:
 - writes a Decision for every escalated finding,
-- may override any other outcome by adding `Override: <reason>` to its Resolution,
 - fills in Reviewer, Date, and Decision (Approved / Changes requested).
 
 A plan can't be marked Approved, and a change can't be archived, while any escalated finding has no decision. Commit the plan before running the review, so `git diff` shows exactly what the loop changed.

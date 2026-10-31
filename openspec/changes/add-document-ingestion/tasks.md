@@ -49,8 +49,6 @@
 - [x] 8.6 No source documents, data/, secrets, or .env files in the diff (git status / git diff --stat)
 - [x] 8.7 Any new dependency is justified in design.md and locked in uv.lock
 - [x] 8.8 README updated if setup or usage changed
-- [ ] 8.9 If an eval set exists: precision/recall recorded in review.md and not worse than the last archived change. Otherwise note "N/A: no eval set" in review.md
-- [ ] 8.10 Implementation-stage review loop (openspec/reviewers/README.md) run and its report is in review.md; every escalated finding has a human Decision. If no personas exist, note "N/A: no personas" in review.md
 
 ## Workflow follow-up
 

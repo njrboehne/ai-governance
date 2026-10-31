@@ -292,16 +292,16 @@ artifacts:
          round if your tool supports it. Between rounds, fix or rebut every
          open finding, editing the plan files directly, but never in a way
          the guardrails say must be escalated.
-      5. Write review-plan.md from the template as the report. Run
-         `openspec validate <change> --strict` after the last edit and say
-         in the report whether it passes.
-      6. Leave Reviewer, Date, Decision, every escalated finding's Decision,
-         and the Checked boxes empty. Never sign off for the human.
-      7. Tell the human: rounds run, counts by outcome, and each escalated
-         finding in one line. Then stop.
+      5. Write review-plan.md from the template: escalated findings only,
+         or "None." Run `openspec validate <change> --strict` after the
+         last edit.
+      6. Leave Reviewer, Date, Decision, and every escalated finding's
+         Decision empty. Never sign off for the human.
+      7. Tell the human each escalated finding in one line, or that none
+         were escalated, and whether validate passes. Then stop.
 
-      If no persona files exist, write "N/A: no personas" under Summary and
-      leave the rest of the template for the human.
+      If no persona files exist, write "N/A: no personas" under Escalated
+      and leave the rest of the template for the human.
     requires:
       - tasks
 
@@ -326,8 +326,9 @@ apply:
     `implementation`; inputs are the plan files, `git diff main...HEAD`, and
     test output). You are the author: fix code or rebut, re-running tests
     after each round of fixes. Write the report to review.md in the change
-    folder, using the same sections as the review-plan template, plus the
-    scenario → test mapping and the other items the Review group asks for.
+    folder: escalated findings only (as in the review-plan template), plus
+    the scenario → test mapping and the other items the Review group asks
+    for.
     Tick only the Review boxes verified by a command you ran (tests, CI,
     validate, git status). Leave escalated decisions and the boxes that need
     human judgment for the human.
