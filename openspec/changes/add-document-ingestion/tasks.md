@@ -42,13 +42,13 @@
 ## 8. Review
 
 - [x] 8.1 Every spec scenario has a passing test; scenario → test mapping recorded in review.md
-- [ ] 8.2 CI is green on the branch (ruff check, ruff format --check, pytest)
-- [ ] 8.3 Diff read end to end; findings and resolutions recorded in review.md
-- [ ] 8.4 `openspec validate add-document-ingestion --strict` passes
-- [ ] 8.5 Code does nothing the specs don't describe; any extra behavior is either removed or added to the specs
-- [ ] 8.6 No source documents, data/, secrets, or .env files in the diff (git status / git diff --stat)
-- [ ] 8.7 Any new dependency is justified in design.md and locked in uv.lock
-- [ ] 8.8 README updated if setup or usage changed
+- [x] 8.2 CI is green on the branch (ruff check, ruff format --check, pytest)
+- [x] 8.3 Diff read end to end; findings and resolutions recorded in review.md
+- [x] 8.4 `openspec validate add-document-ingestion --strict` passes
+- [x] 8.5 Code does nothing the specs don't describe; any extra behavior is either removed or added to the specs
+- [x] 8.6 No source documents, data/, secrets, or .env files in the diff (git status / git diff --stat)
+- [x] 8.7 Any new dependency is justified in design.md and locked in uv.lock
+- [x] 8.8 README updated if setup or usage changed
 - [ ] 8.9 If an eval set exists: precision/recall recorded in review.md and not worse than the last archived change. Otherwise note "N/A: no eval set" in review.md
 - [ ] 8.10 Implementation-stage review loop (openspec/reviewers/README.md) run and its report is in review.md; every escalated finding has a human Decision. If no personas exist, note "N/A: no personas" in review.md
 

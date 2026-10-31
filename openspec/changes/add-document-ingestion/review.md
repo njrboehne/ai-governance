@@ -49,3 +49,28 @@ Offline tests run with `uv run pytest`; tests in `test_network.py` run with `uv 
 Gaps found and closed during 8.1:
 - No test checked that a checksum failure leaves an existing `chunks.jsonl` unchanged. Added `test_cli::test_checksum_failure_returns_1_and_keeps_existing_chunks`.
 - "No markup" was checked only on the EU fixture. Added `test_network::test_no_markup_or_non_breaking_spaces` over every field of all 198 real chunks.
+
+## CI (8.2)
+
+Green on draft PR #1 (https://github.com/njrboehne/ai-governance/pull/1), commit 58d27c1: ruff check, ruff format --check, pytest (offline tests).
+
+## Diff read (8.3)
+
+Read `git diff main...HEAD` end to end (source, tests, fixtures, pyproject, README, plan docs). No defects found.
+
+Mid-change senior-engineer pass (after 5.2, 2026-10-22), all resolved:
+- SE-1, SE-3, SE-4, SE-5 fixed in 5d26e95: missing EU markers and unexpected headings raise `IngestError`; an unreadable cache or unwritable `raw/` raises `IngestError` instead of a traceback; one shared `atomic_write` for the cache and `chunks.jsonl`; skipped heading tags compared by identity.
+- SE-2 fixed in 44e582c (design) and a459d9c: `Source.chunks(data)` passes the record's `version` and `cite` to the parser, so they are defined once.
+
+Noted, no action. The NIST parser relies on three layout rules that hold for the pinned PDF. Each was checked against the real text, and a changed PDF fails its checksum before parsing:
+- A page break sends the following lines to the category statement. No subcategory statement in the pinned PDF crosses a page break: all 72 texts and 19 category titles end with a period and hold one statement each.
+- A numbered section heading skips text until the next table. In the Core region it matches only "5.2 Map", "5.3 Measure" and "5.4 Manage".
+- A line-end hyphen is removed unless the word is in `KEEP_HYPHEN`. All 68 rejoined words in the Core are syllable breaks except "context-", which is kept.
+
+## Checks (8.4–8.8)
+
+- 8.4: `openspec validate add-document-ingestion --strict` passes.
+- 8.5: No behavior beyond the specs and design. Extras checked: the hidden `--data-dir` flag and help with no subcommand (design.md, CLI section); `IngestError` for a missing EU heading or title, an unreadable cache and an unwritable `raw/` (covered by "fails loudly" and "Download failures").
+- 8.6: The diff has no source documents, `data/`, secrets or `.env` files. The only document-like file is the hand-made 3.3 KB fixture `tests/fixtures/eu_ai_act_sample.xhtml`. `data/` and `.claude/` are ignored.
+- 8.7: `pypdf` 6.21.1 and `beautifulsoup4` 4.15.0 (with `soupsieve` 3.0.3) are justified in design.md Decision 10 and locked in `uv.lock`.
+- 8.8: README has setup, usage (`ingest`, `--refresh`, output location, run from repo root) and how to run the network tests.
