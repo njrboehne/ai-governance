@@ -2,7 +2,7 @@
 
 ## Why
 
-Every later feature (retrieval, cited answers, the eval set) depends on having the two source documents as clean, citable chunks. The documents need to be fetched and split in a way that is repeatable and checkable before any search work starts, because a retrieval score means nothing if the chunks underneath it can change silently.
+Every later feature (the spec checker, its cited findings, and the eval set) depends on having the two source documents as clean, citable chunks. The documents need to be fetched and split in a way that is repeatable and checkable before any search work starts, because a finding-accuracy score means nothing if the framework text underneath it can change silently.
 
 ## What Changes
 
@@ -13,13 +13,13 @@ Every later feature (retrieval, cited answers, the eval set) depends on having t
 - Downloads are cached. Each file is checked against a pinned SHA-256 checksum, and the command re-downloads only when given `--refresh`. If a source changes upstream, the command stops and reports it instead of quietly producing different chunks.
 - New runtime dependencies: `pypdf` (PDF text) and `beautifulsoup4` (XHTML parsing).
 
-Out of scope: embeddings, search, answering questions, and the eval set. Each will be its own change. Splitting chunks smaller than an article or subcategory is deferred until the eval set shows it is needed.
+Out of scope: reading the specs being checked, the LLM judge, findings, and the eval set. Each will be its own change. Splitting chunks smaller than an article or subcategory is deferred until the eval set shows it is needed.
 
 Also out of scope, deliberately, because only the units listed above are chunked:
 - **NIST AI 100-1:** Part 1 (definitions, AI actors, and Section 3's characteristics of trustworthy AI), the introductions to each function, Profiles, and the appendices.
 - **EU AI Act:** recitals, chapter and section headings (articles are not tagged with the chapter they belong to), and footnote text (markers stay in the text).
 
-Effect: questions about these topics (for example "What are NIST's characteristics of trustworthy AI?" or "What does Chapter III cover?") have no chunk to answer them. The eval set should mark such questions out of scope until they are covered. The follow-up change `add-framework-context` will add NIST Part 1 chunks and EU chapter/section context.
+Effect: the checker has no framework text for these topics (for example NIST's characteristics of trustworthy AI, or which EU chapter an article belongs to). The eval set should mark findings that depend on them out of scope until they are covered. The follow-up change `add-framework-context` will add NIST Part 1 chunks and EU chapter/section context.
 
 ## Capabilities
 
