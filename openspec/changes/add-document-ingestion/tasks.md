@@ -35,9 +35,9 @@
 
 ## 7. Full-document checks
 
-- [ ] 7.1 Add `@pytest.mark.network` tests using a session-scoped fixture that downloads both files once into `tmp_path_factory`. Assert: `section_id`s exactly "Article 1".."Article 113" and "Annex I".."Annex XIII" in order; 72 subcategories split 19/18/22/13; 198 lines in article → annex → NIST order; all seven fields non-empty strings; unique ids; the exact Article 6, Annex III, and GOVERN 1.1 metadata from the spec; the GOVERN 4 title and GOVERN 4.1 ending; GOVERN 6.2, MAP 5.2, MEASURE 4.3, and MANAGE 4.3 endings; "integrated", "context-specific", "context-relevant", and "the MAP function"; no furniture strings in any NIST chunk; no whitespace-normalized `rct_N` text in any chunk. Verify `uv run pytest -m network` passes locally
-- [ ] 7.2 Run `uv run ai-governance ingest` twice from the repo root and verify both runs produce byte-identical `data/chunks.jsonl` (compare with `shasum`), the second run reports both files as cached, and `git status` is clean
-- [ ] 7.3 Open the Article 6 and Annex III chunk `url`s in a browser and verify each lands on that provision; if the anchor doesn't survive the redirect, record it in review.md and raise it before archive
+- [x] 7.1 Add `@pytest.mark.network` tests using a session-scoped fixture that downloads both files once into `tmp_path_factory`. Assert: `section_id`s exactly "Article 1".."Article 113" and "Annex I".."Annex XIII" in order; 72 subcategories split 19/18/22/13; 198 lines in article → annex → NIST order; all seven fields non-empty strings; unique ids; the exact Article 6, Annex III, and GOVERN 1.1 metadata from the spec; the GOVERN 4 title and GOVERN 4.1 ending; GOVERN 6.2, MAP 5.2, MEASURE 4.3, and MANAGE 4.3 endings; "integrated", "context-specific", "context-relevant", and "the MAP function"; no furniture strings in any NIST chunk; no whitespace-normalized `rct_N` text in any chunk. Verify `uv run pytest -m network` passes locally
+- [x] 7.2 Run `uv run ai-governance ingest` twice from the repo root and verify both runs produce byte-identical `data/chunks.jsonl` (compare with `shasum`), the second run reports both files as cached, and `git status` is clean
+- [x] 7.3 Open the Article 6 and Annex III chunk `url`s in a browser and verify each lands on that provision; if the anchor doesn't survive the redirect, record it in review.md and raise it before archive
 
 ## 8. Review
 
