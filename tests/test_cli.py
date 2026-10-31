@@ -99,6 +99,33 @@ def test_count_mismatch_returns_1_and_keeps_existing_chunks(
     assert existing.read_bytes() == b"previous run\n"
 
 
+@pytest.mark.parametrize(
+    ("args", "message"),
+    [
+        ([], "--refresh"),
+        (["--refresh"], "does not match its checksum"),
+    ],
+    ids=["corrupt-cache", "upstream-changed"],
+)
+def test_checksum_failure_returns_1_and_keeps_existing_chunks(
+    tmp_path, downloads, monkeypatch, capsys, args, message
+):
+    ingest(tmp_path)
+    eu_file = tmp_path / "raw" / FIXTURE_SOURCES[0].filename
+    existing = (tmp_path / "chunks.jsonl").read_bytes()
+    if args:
+        monkeypatch.setitem(BODIES, "https://example.org/eu.xhtml", b"changed upstream")
+    else:
+        eu_file.write_bytes(b"corrupted")
+    cached = eu_file.read_bytes()
+
+    assert main(["ingest", "--data-dir", str(tmp_path), *args]) == 1
+    err = capsys.readouterr().err
+    assert "EU AI Act" in err and message in err
+    assert (tmp_path / "chunks.jsonl").read_bytes() == existing
+    assert eu_file.read_bytes() == cached
+
+
 def test_two_runs_in_separate_dirs_write_identical_bytes(tmp_path, downloads):
     ingest(tmp_path / "a")
     ingest(tmp_path / "b")

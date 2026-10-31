@@ -41,7 +41,7 @@
 
 ## 8. Review
 
-- [ ] 8.1 Every spec scenario has a passing test; scenario → test mapping recorded in review.md
+- [x] 8.1 Every spec scenario has a passing test; scenario → test mapping recorded in review.md
 - [ ] 8.2 CI is green on the branch (ruff check, ruff format --check, pytest)
 - [ ] 8.3 Diff read end to end; findings and resolutions recorded in review.md
 - [ ] 8.4 `openspec validate add-document-ingestion --strict` passes

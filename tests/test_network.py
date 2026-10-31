@@ -70,6 +70,13 @@ def test_all_fields_are_non_empty_strings(chunks):
             assert isinstance(value, str) and value, (c.section_id, f.name)
 
 
+def test_no_markup_or_non_breaking_spaces(chunks):
+    for c in chunks:
+        for f in fields(Chunk):
+            value = getattr(c, f.name)
+            assert not re.search(r"<[a-zA-Z/]|&#?\w+;| ", value), (c.section_id, f.name)
+
+
 def test_ids_are_unique(chunks):
     assert len({c.id for c in chunks}) == len(chunks)
 
